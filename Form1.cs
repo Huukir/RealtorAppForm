@@ -15,13 +15,15 @@ namespace RealtorAppForm
 {
     public partial class Form1 : Form
     {
-        DataBase dataBase = new DataBase();
-        List<Panel> panelList = new List<Panel>();
+        DataBase dataBase = new DataBase();         // переменная базы данных
+        bool IsFound = false;                       // переменная для понятия того, был ли найден результат поисков из бд
         public Form1()
         {
             InitializeComponent();
-            StartPosition = FormStartPosition.CenterScreen;
-            panelList.Add(BuyPanel);
+            Font = Properties.Settings.Default.UserFont;
+            BackColor = Properties.Settings.Default.UserColor;
+            ForeColor = Properties.Settings.Default.UserColorText;
+            StartPosition = FormStartPosition.CenterScreen; // центрирование приложения
             if (AppartmentRB.Checked)
             {
                 BuyRB.Visible = true;
@@ -151,6 +153,7 @@ namespace RealtorAppForm
 
                 if (iter >= 12)
                 {
+                    IsFound = true;
                     richTextBox1.Text += general_dr["Rooms"].ToString() + "-ая, ";                  // кол-во комнат
                     richTextBox1.Text += general_dr["Price"].ToString() + "р., ";                   // цена
                     richTextBox1.Text += general_dr["Square"].ToString() + "м², ";                  // площадь
@@ -180,12 +183,10 @@ namespace RealtorAppForm
                     richTextBox1.Text += general_dr["owner_phone"].ToString() + "\n\n";             // Номер хозяйна объявления
                     richTextBox1.Text += "====================================================================================\n\n";                    // отступ
                 }
-                else
-                {
-                    richTextBox1.Text += "\t\t\tПо вашему запросов объявлений не найдено =( \n\n";
-                    continue;
-                }
             }
+            if (!IsFound) // если результат не был найдет, то не выводить сообщение
+                richTextBox1.Text += "\t\t\tПо вашему запросов объявлений не найдено =( \n\n";
+            IsFound = false;
             general_dr.Close();
         }
         // метод выборки квартир на аренду
@@ -282,6 +283,7 @@ namespace RealtorAppForm
 
                 if (iter >= 11)
                 {
+                    IsFound = true;
                     richTextBox1.Text += general_dr["Rooms"].ToString() + "-ая, ";                  // кол-во комнат
                     richTextBox1.Text += general_dr["Price"].ToString() + "р., ";                   // цена
                     richTextBox1.Text += general_dr["Deadline"].ToString() + ", ";                  // цена
@@ -294,12 +296,10 @@ namespace RealtorAppForm
                     richTextBox1.Text += general_dr["owner_phone"].ToString() + "\n\n";             // Id хозяйна объявления
                     richTextBox1.Text += "====================================================================================\n\n";                    // отступ
                 }
-                else
-                {
-                    richTextBox1.Text += "\t\t\tПо вашему запросов объявлений не найдено =( \n\n";
-                    continue;
-                }
             }
+            if (!IsFound) // если результат не был найдет, то не выводить сообщение
+                richTextBox1.Text += "\t\t\tПо вашему запросов объявлений не найдено =( \n\n";
+            IsFound = false;
             general_dr.Close();
         }
 
@@ -419,6 +419,7 @@ namespace RealtorAppForm
 
                 if (iter >= 11)
                 {
+                    IsFound = true;
                     richTextBox1.Text += general_dr["Name"].ToString() + ", ";                              // тип
                     richTextBox1.Text += general_dr["Price"].ToString() + "р., ";                           // цена
                     richTextBox1.Text += general_dr["Square"].ToString() + "м², ";                          // площадь дома
@@ -433,7 +434,11 @@ namespace RealtorAppForm
                     richTextBox1.Text += general_dr["owner_phone"].ToString() + "\n\n";                     // номер хозяйна объявления
                     richTextBox1.Text += "====================================================================================\n\n";                  // отступ
                 }
+
             }
+            if (!IsFound) // если результат не был найдет, то не выводить сообщение
+                richTextBox1.Text += "\t\t\tПо вашему запросу объявлений не найдено =( \n\n";
+            IsFound = false;
             general_dr.Close();
         }
 
@@ -565,6 +570,7 @@ namespace RealtorAppForm
 
                 if (iter >= 13)
                 {
+                    IsFound = true;
                     richTextBox1.Text += general_dr["Name"].ToString() + ", ";                              // тип
                     richTextBox1.Text += general_dr["Price"].ToString() + "р., ";                           // цена
                     richTextBox1.Text += general_dr["Square"].ToString() + "м², ";                          // площадь дома
@@ -584,6 +590,9 @@ namespace RealtorAppForm
                     richTextBox1.Text += "====================================================================================\n\n";                  // отступ
                 }
             }
+            if (!IsFound) // если результат не был найдет, то не выводить сообщение
+                richTextBox1.Text += "\t\t\tПо вашему запросу объявлений не найдено =( \n\n";
+            IsFound = false;
             general_dr.Close();
         }
 
@@ -653,6 +662,7 @@ namespace RealtorAppForm
 
                 if (iter >= 6)
                 {
+                    IsFound = true;
                     if (Convert.ToBoolean(general_dr["Rent_Or_Buy"].ToString()))                            // Сдаётся или продаётся участок (0 - сдаётся, 1 - продаётся)
                         richTextBox1.Text += "продажа, ";
                     else
@@ -669,37 +679,15 @@ namespace RealtorAppForm
                     richTextBox1.Text += "====================================================================================\n\n";                  // отступ
                 }
             }
+            if (!IsFound) // если результат не был найдет, то не выводить сообщение
+                richTextBox1.Text += "\t\t\tПо вашему запросу объявлений не найдено =( \n\n";
+            IsFound = false;
             general_dr.Close();
-        }
-
-        private void button1_Click(object sender, EventArgs e)  // кнопка поиска квартир на продажу
-        {
-            Select_Apartmets_For_Sale();
-        }
-
-        private void button2_Click(object sender, EventArgs e)  // кнопка поиска квартир на сдачу
-        {
-            Select_Apartmets_For_Rent();
-        }
-
-        private void button3_Click(object sender, EventArgs e)  // кнопка поиска домов на продажу
-        {
-            Select_Houses_For_Sale();
-        }
-
-        private void button4_Click(object sender, EventArgs e)  // кнопка поиска домов на сдачу
-        {
-            Select_Houses_For_Rent();
-        }
-
-        private void button5_Click(object sender, EventArgs e)  // кнопка поиска земельных участков
-        {
-            Select_Land_Plots();
         }
 
         private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)   // кнопка сохранения 
         {
-            if(richTextBox1.Text == "")
+            if (richTextBox1.Text == "")
             {
                 MessageBox.Show("нечего сохранять!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -716,12 +704,10 @@ namespace RealtorAppForm
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string temp = File.ReadAllText(openFileDialog.FileName);
-                if(!string.IsNullOrEmpty(temp))
+                if (!string.IsNullOrEmpty(temp))
                     richTextBox1.Text = temp;
-                else MessageBox.Show("Выбранный файл невозможно считать!","Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else MessageBox.Show("Выбранный файл невозможно считать!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
         }
 
         private void печатьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -916,6 +902,67 @@ namespace RealtorAppForm
         private void поддержкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("mail: suzmac@mail.ru | WhatsApp: 89184116069", "Контактные данные");
+        }
+
+
+        // метод шрифта по умолчанию
+        private void поУмолчаниюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Font = DefaultFont;
+            Properties.Settings.Default.UserFont = DefaultFont;                     // запись шрифта текста в настройки проекта
+            Properties.Settings.Default.Save();                                     // сохранение настроек проекта 
+        }
+
+        // метод изменения шрифта в форме
+        private void изменитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FontDialog myFontDialog = new FontDialog();
+            if (myFontDialog.ShowDialog() == DialogResult.OK)
+            {
+                Font = myFontDialog.Font;
+                Properties.Settings.Default.UserFont = myFontDialog.Font;           // запись шрифта текста в настройки проекта
+                Properties.Settings.Default.Save();                                 // сохранение настроек проекта 
+            }
+        }
+
+        // метод изменения цвета текста 
+        private void изменитьToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog myColorDialog = new ColorDialog();
+            if (myColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                this.ForeColor = myColorDialog.Color;
+                Properties.Settings.Default.UserColorText = myColorDialog.Color;    // запись цвета текста в настройки проекта
+                Properties.Settings.Default.Save();                                 // сохранение настроек проекта 
+            }    
+        }
+
+        // метод цвета текста по умолчанию
+        private void поУмлочаниюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ForeColor = Color.Black;
+            Properties.Settings.Default.UserColorText = Color.Black;                // запись цвета текста в настройки проекта
+            Properties.Settings.Default.Save();                                     // сохранение настроек проекта 
+        }
+
+        // метод изменения цвета формы
+        private void изменитьToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            ColorDialog myColorDialog = new ColorDialog();
+            if (myColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                this.BackColor = myColorDialog.Color;
+                Properties.Settings.Default.UserColor = myColorDialog.Color;        // запись цвета формы в настройки проекта
+                Properties.Settings.Default.Save();                                 // сохранение настроек проекта 
+            }    
+        }
+
+        // метод цвета формы по умолчанию
+        private void поУмолчаниюToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.BackColor = Color.FromArgb(255, 192, 128);
+            Properties.Settings.Default.UserColor = Color.FromArgb(255, 192, 128);  // запись цвета формы в настройки проекта
+            Properties.Settings.Default.Save();                                     // сохранение настроек проекта 
         }
     }
 }
